@@ -4,6 +4,7 @@ var AWS = require('aws-sdk');
 var squel = require('squel');
 var schedule = require('node-schedule');
 var nodemailer = require('nodemailer');
+var sesTransport = require('nodemailer-ses-transport');
 
 // var emailForm = require('./udemy_email.html');
 
@@ -13,20 +14,17 @@ router.get('/', function(req, res, next) {
 });
 
 /* email setting */
-var transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
-  port: 465,
-  secure: true,
-  auth: {
-    user: '*****',
-    pass: '*****'
-  }
-});
+var transporter = nodemailer.createTransport(sesTransport({
+  accessKeyId: '',
+  secretAccessKey: '',
+  rateLimit: 5,
+  region: 'us-west-2' // Oregon
+}));
 
 var mailOptions = {
-  from: '"직방" <syhong0714@gmail.com>', // sender address
+  from: '"직방포유_테스트" <hsy@zigbang.com>', // sender address
   to: 'syhong0714@gmail.com', // list of receivers
-  subject: '직방포유', // Subject line
+  subject: '직방포유_테스트', // Subject line
   text: '이것은 텍스트입니다.', // plaintext body
   html: '<br>테스트 메일<br>' // html body
 };
@@ -40,6 +38,7 @@ var sendMail = transporter.sendMail(mailOptions, function(error, info) {
 
 /* cronjob setting */
 var j = schedule.scheduleJob('30 * * * *', function(){
+  /*
   // var qBuilder_target = squel.select().from('emailTarget').toString();
   // email, local2, local3, deposit, rent
 
@@ -66,11 +65,12 @@ var j = schedule.scheduleJob('30 * * * *', function(){
 
   var query = qBuilder.toString();
 
-  /*
+
   if (result.length > 0) {
     sendMail(email, sendData);
   }
   */
+
 
   sendMail();
 });
