@@ -40,6 +40,38 @@ var sendMail = transporter.sendMail(mailOptions, function(error, info) {
 
 /* cronjob setting */
 var j = schedule.scheduleJob('30 * * * *', function(){
+  // var qBuilder_target = squel.select().from('emailTarget').toString();
+  // email, local2, local3, deposit, rent
+
+  // squel 로 쿼리 질의 - item 에서 "날짜 기준"으로 내가 지정한 "지역"과 "가격"을 고려한 방이 오픈되었는지 확인
+  var email = "syhong0714@gmail.com";
+  var start_time = "2016-12-05 00:00:00";
+  var end_time = "2016-12-05 23:59:59";
+  var local2 = "local2";
+  var local3 = "local3";
+  var deposit = 1000;
+  var rent = 30;
+
+  var qBuilder = squel.select().from('item')
+    .where("created_at BETWEEN ? AND ?", start_time, end_time) // 오늘 올라온 따끈따끈한 방
+    .where("deposit < ?", deposit) // 보증금
+    .where("rent < ?", rent) // 원룸
+    .where("local2 = ?", local2) // 지역 - 구
+    .where("local3 = ?", local3) // 지역 - 동
+    .order("view_count") // 조회수 높은 것으로 진행 -> 누르고 싶도록
+    .limit(10);
+
+  // 뭔가 연세대, 고려대, 이화여자대학교와 같이 대학교를 입력하거나
+  // 지하철역을 입력해두면 좋을 것 같다
+
+  var query = qBuilder.toString();
+
+  /*
+  if (result.length > 0) {
+    sendMail(email, sendData);
+  }
+  */
+
   sendMail();
 });
 
