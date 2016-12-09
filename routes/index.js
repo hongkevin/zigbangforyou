@@ -6,6 +6,8 @@ var schedule = require('node-schedule');
 var nodemailer = require('nodemailer');
 var sesTransport = require('nodemailer-ses-transport');
 
+var config = ('../config/config');
+
 // var emailForm = require('./udemy_email.html');
 
 /* GET home page. */
@@ -15,8 +17,8 @@ router.get('/', function(req, res, next) {
 
 /* email setting */
 var transporter = nodemailer.createTransport(sesTransport({
-  accessKeyId: '',
-  secretAccessKey: '',
+  accessKeyId: config.accessKeyId,
+  secretAccessKey: config.secretAccessKey,
   rateLimit: 5,
   region: 'us-west-2' // Oregon
 }));
@@ -70,7 +72,6 @@ var j = schedule.scheduleJob('30 * * * *', function(){
     sendMail(email, sendData);
   }
   */
-
 
   sendMail();
 });
