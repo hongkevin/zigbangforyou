@@ -4,6 +4,7 @@ var AWS = require('aws-sdk');
 var squel = require('squel');
 var schedule = require('node-schedule');
 var nodemailer = require('nodemailer');
+var verifier = require('email-verify');
 var sesTransport = require('nodemailer-ses-transport');
 
 var config = ('../config/config');
@@ -13,6 +14,16 @@ var config = ('../config/config');
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
+});
+
+/* email verify logic */
+var verifier.verify(input, function(err, info) {
+  if (err) {
+    console.log(err);
+  } else {
+    console.log("Success (T/F): " + info.success);
+    console.log("Info : " + info.info);
+  }
 });
 
 /* email setting */
