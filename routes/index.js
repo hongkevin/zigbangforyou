@@ -17,26 +17,45 @@ router.get('/', function(req, res, next) {
 });
 
 /* email verify logic */
-var verifier.verify(input, function(err, info) {
+/*
+verifier.verify(input, function(err, info) {
   if (err) {
     console.log(err);
+    return err;
   } else {
     console.log("Success (T/F): " + info.success);
     console.log("Info : " + info.info);
+    return info.success;
   }
 });
+*/
 
 /* email setting */
+/*
 var transporter = nodemailer.createTransport(sesTransport({
   accessKeyId: config.accessKeyId,
   secretAccessKey: config.secretAccessKey,
   rateLimit: 5,
   region: 'us-west-2' // Oregon
 }));
+*/
+
+/* email setting */
+var transporter = nodemailer.createTransport({
+  host: 'smtp.gmail.com',
+  port: 465,
+  secure: true,
+  auth: {
+    user: config.userEmail,
+    pass: config.userPassword
+    // user: '*****',
+    // pass: '*****'
+  }
+});
 
 var mailOptions = {
-  from: '"직방포유_테스트" <hsy@zigbang.com>', // sender address
-  to: 'syhong0714@gmail.com', // list of receivers
+  from: '"직방포유_테스트" <syhong0714@gmail.com>', // sender address
+  to: 'syhong0714syhong0714@gmail.com', // list of receivers
   subject: '직방포유_테스트', // Subject line
   text: '이것은 텍스트입니다.', // plaintext body
   html: '<br>테스트 메일<br>' // html body
@@ -78,13 +97,24 @@ var j = schedule.scheduleJob('30 * * * *', function(){
 
   var query = qBuilder.toString();
 
-
   if (result.length > 0) {
     sendMail(email, sendData);
   }
   */
-
-  sendMail();
+  verifier.verify(mailOptions.to, function(err, info) {
+    if (err) {
+      console.log(err);
+      return err;
+    } else {
+      console.log("Success (T/F): " + info.success);
+      console.log("Info : " + info.info);
+      if (info.success === true) {
+        sendMail();
+      } else {
+        console.log(info.success || err);
+      }
+    }
+  });
 });
 
 module.exports = router;
