@@ -58,7 +58,7 @@ var mailOptions = {
   to: 'syhong0714syhong0714@gmail.com', // list of receivers
   subject: '직방포유_테스트', // Subject line
   text: '이것은 텍스트입니다.', // plaintext body
-  html: '<br>테스트 메일<br>' // html body
+  html: '<br>이것은 테스트 메일입니다.<br>' // html body
 };
 
 var sendMail = transporter.sendMail(mailOptions, function(error, info) {
